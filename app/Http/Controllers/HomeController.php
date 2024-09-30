@@ -12,11 +12,13 @@ use App\Models\T_PCHREQHEAD;
 use App\Models\T_QUOHEAD;
 use App\Models\T_SLO_DRAFT_HEAD;
 use App\Models\T_SLOHEAD;
+use chillerlan\QRCode\QRCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class HomeController extends Controller
 {
@@ -248,8 +250,10 @@ class HomeController extends Controller
         }
 
         return [
-            'data' => $dataTobeApproved, 'dataApproved' => $dataApproved,
-            'dataPurchaseRequest' => $dataPurchaseRequestTobeUpproved, 'dataPurchaseRequestApproved' => $dataPurchaseRequestApproved,
+            'data' => $dataTobeApproved,
+            'dataApproved' => $dataApproved,
+            'dataPurchaseRequest' => $dataPurchaseRequestTobeUpproved,
+            'dataPurchaseRequestApproved' => $dataPurchaseRequestApproved,
             'dataSalesOrderDraft' => $dataSalesOrderDraftTobeProcessed,
             'dataPurchaseOrder' => $dataPurchaseOrderTobeUpproved,
             'dataDeliveryOrderNoDriver' => $dataDeliveryOrderNoDriver,
@@ -323,5 +327,19 @@ class HomeController extends Controller
         }
 
         return ['data' => $data, 'PurchaseRequest' => $PurchaseRequest, 'PurchaseOrder' => $PurchaseOrder, 'SPKData' => $SPKData];
+    }
+
+    function readQR()
+    {
+        try {
+            $result = (new QRCode())->readFromFile(storage_path('app\tes.png')); // -> DecoderResult
+
+            $content = $result->data;
+
+            return ['data' => $content];
+        } catch (Throwable $e) {
+            // oopsies!
+            return $e->getMessage();
+        }
     }
 }

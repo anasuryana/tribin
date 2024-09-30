@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\AccessRulesController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +33,8 @@ Route::get('/logout', function (Request $request) {
     $request->user()->currentAccessToken()->delete();
     return ['message' => 'ok logout'];
 })->middleware('auth:sanctum');
+
+Route::get('/read-qr', [HomeController::class, 'readQR']);
 
 
 # Terkait API Menu
